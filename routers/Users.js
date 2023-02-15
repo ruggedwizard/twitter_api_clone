@@ -9,3 +9,6 @@ router.post('/',CreateUser)
 router.patch('/:userId',UpdateUser)
 
 router.delete('/:userId',DeleteUser)
+
+
+module.exports = router

@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema({
     },
     bio:{
         type:String,
+        maxlength:300
     },
     location:{
         type:String
@@ -18,6 +19,7 @@ const userSchema = new mongoose.Schema({
     email:{
         type:String,
         required:[true,'Please Provide an Emial address'],
+        match:[/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,'Please Provide a Valid Email'],
         minlength:5,
         maxlength:100,
         unique:true
@@ -27,8 +29,7 @@ const userSchema = new mongoose.Schema({
     },
     password:{
         type:String,
-        required:[true,'Please Enter a minimum of 8 Characters password'],
-        match:[/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,'Please Provide a Valid Email'],
+        required:[true,'Please Enter a minimum of 8 Characters password']
     },
     username:{
         type:String,
