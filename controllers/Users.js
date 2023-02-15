@@ -17,8 +17,22 @@ const CreateUser = async (req,res) =>{
 
     // Update the user with hashed password
     const updatedUser = {...req.body,password:hashPassword}
+    
+    // Check if the user already exists in the database
+    const _user = await User.findOne({email:email})
+    if(_user != null){
+        res.status(400).json({messgae:"An Account with that email address already exists"})
+    }
+
+    // Check if the username 
+    if(_user.username == username){
+        res.status(400).json({message:"Username Already Exist"})
+    }
+
+
+    // Creates a new user if no data available
     const user = await User.create(updatedUser)
-    res.status(201).json({updatedUser,token})   
+    res.status(201).json({user,token})   
 }
 
 const UpdateUser = (req,res) =>{

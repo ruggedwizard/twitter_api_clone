@@ -20,7 +20,7 @@ app.get('/',(req,res)=>{
 
 const start = async () =>{
     try{
-        // await connectDB(process.env.MONGO_URI)
+        await connectDB(process.env.MONGO_URI)
         app.listen(PORT,()=>{
             console.log(`Server is running on Port ${PORT}...`)
         })
