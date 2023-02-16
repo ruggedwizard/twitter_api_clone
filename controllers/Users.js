@@ -49,6 +49,8 @@ const LoginUser = async (req,res) =>{
     }
     // find the user from the database
     const user = await User.findOne({email:email})
+
+
     //If the user does not exist
 
     if(user==null){
@@ -56,6 +58,7 @@ const LoginUser = async (req,res) =>{
         res.status(404).send({message:"User Login Details Mismacth"})
     }
 
+    // If the user exists in the database
     if(user){
 
         const result = await bcrypt.compare(password,user.password)
@@ -65,13 +68,11 @@ const LoginUser = async (req,res) =>{
             res.json({email:user.email,token})
         }
     }
-    // Check if the user does not exist
 
-
-    // generate access token for the user
 }
 
 const UpdateUser = (req,res) =>{
+    
     res.send('Profile Updated')
 }
 
