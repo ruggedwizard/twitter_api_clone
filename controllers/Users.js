@@ -71,9 +71,24 @@ const LoginUser = async (req,res) =>{
 
 }
 
-const UpdateUser = (req,res) =>{
-    
-    res.send('Profile Updated')
+const UpdateUser =async (req,res) =>{
+    // get the user email from the req.user from the auth token
+    const {email,username} = req.user
+    // updateable values from the user model
+    const {fullname,bio,location} = req.body
+
+    // Check if the user tries to send a blank data 
+    if(!fullname || !bio || !location){
+        res.status(400).json({message:"Fullname, bio, and Location Cannot be empty"})
+    }
+    // find the profile from the database
+    const profile = await User.findOneAndUpdate({email:email,username:username},req.body,{new:true,runValidators:true}).select('-password')
+
+    if(!profile){
+        res.status(400).json({message:"No Record Found"})
+    }
+
+    res.status(200).json({profile})
 }
 
 const DeleteUser = (req,res) =>{
