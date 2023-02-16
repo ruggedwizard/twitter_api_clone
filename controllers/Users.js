@@ -13,26 +13,31 @@ const CreateUser = async (req,res) =>{
     const hashPassword = await bcrypt.hash(password,salt)
 
     // generating webtokens
-    const token = jwt.sign({userId:username,email:email},process.env.JWT_SECRET,{expiresIn:'30d'}) 
+    const token = await jwt.sign({userId:username,email:email},process.env.JWT_SECRET,{expiresIn:'30d'}) 
 
     // Update the user with hashed password
     const updatedUser = {...req.body,password:hashPassword}
     
+    try{
+
+        const user = await (await User.create(updatedUser))
+        res.status(201).json({user,token})   
+
+    } catch(error){
+        const {email, username} = error.keyValue
+
+        if(email){
+            res.status(400).json({"message":"Email Already Exists, try another Email"})
+        }
+
+        if(username){
+            res.status(400).json({"message":"Username Already Exist"})
+        }
+        
+    }
     // Check if the user already exists in the database
-    const _user = await User.findOne({email:email})
-    if(_user != null){
-        res.status(400).json({messgae:"An Account with that email address already exists"})
-    }
-
-    // Check if the username 
-    if(_user.username == username){
-        res.status(400).json({message:"Username Already Exist"})
-    }
-
 
     // Creates a new user if no data available
-    const user = await User.create(updatedUser)
-    res.status(201).json({user,token})   
 }
 
 const UpdateUser = (req,res) =>{
