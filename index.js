@@ -5,6 +5,7 @@ const connectDB = require('./db/connects')
 const PORT = process.env.PORT || 3000
 
 const authRouters = require('./routers/Users')
+
 app.use(express.json())
 
 // Connecting Routers

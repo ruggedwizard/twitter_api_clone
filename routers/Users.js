@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router()
-const {CreateUser,UpdateUser,DeleteUser} = require('../controllers/Users')
+const {CreateUser,UpdateUser,DeleteUser,LoginUser} = require('../controllers/Users')
 
 
-router.post('/',CreateUser)
+router.post('/register',CreateUser)
 
+router.post('/login',LoginUser)
 
 router.patch('/:userId',UpdateUser)
 

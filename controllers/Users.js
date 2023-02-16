@@ -18,12 +18,14 @@ const CreateUser = async (req,res) =>{
     // Update the user with hashed password
     const updatedUser = {...req.body,password:hashPassword}
     
+    // Create User or Check for error messgae in the console
     try{
 
         const user = await (await User.create(updatedUser))
         res.status(201).json({user,token})   
 
     } catch(error){
+
         const {email, username} = error.keyValue
 
         if(email){
@@ -35,9 +37,38 @@ const CreateUser = async (req,res) =>{
         }
         
     }
-    // Check if the user already exists in the database
 
-    // Creates a new user if no data available
+}
+
+
+const LoginUser = async (req,res) =>{
+    const {email, password } = req.body
+    // Check if the user provide any valid data
+    if(!email || !password ){
+        res.send({"messgae":"You cannot Login without providing any valid details"})
+    }
+    // find the user from the database
+    const user = await User.findOne({email:email})
+    //If the user does not exist
+
+    if(user==null){
+
+        res.status(404).send({message:"User Login Details Mismacth"})
+    }
+
+    if(user){
+
+        const result = await bcrypt.compare(password,user.password)
+        if(result === true){
+            const token = await jwt.sign({userId:user.username,email:user.email},process.env.JWT_SECRET,{expiresIn:'30d'}) 
+            // send the access token and email address
+            res.json({email:user.email,token})
+        }
+    }
+    // Check if the user does not exist
+
+
+    // generate access token for the user
 }
 
 const UpdateUser = (req,res) =>{
@@ -50,5 +81,5 @@ const DeleteUser = (req,res) =>{
 
 
 module.exports = {
-    CreateUser, UpdateUser, DeleteUser
+    CreateUser, UpdateUser, DeleteUser, LoginUser
 }
