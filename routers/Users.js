@@ -10,7 +10,7 @@ router.post('/login',LoginUser)
 
 router.patch('/',authMiddleware,UpdateUser)
 
-router.delete('/:userId',DeleteUser)
+router.delete('/',authMiddleware,DeleteUser)
 
 
 module.exports = router

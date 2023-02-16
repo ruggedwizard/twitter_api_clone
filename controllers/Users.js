@@ -91,8 +91,18 @@ const UpdateUser =async (req,res) =>{
     res.status(200).json({profile})
 }
 
-const DeleteUser = (req,res) =>{
-    res.send('Profile Deleted')
+const DeleteUser = async (req,res) =>{
+    const {email,username} = req.user
+
+    const profile = await User.findOneAndDelete({email:email,username:username})
+
+    if(profile == null){
+        res.status(400).json({message:"Profile Does not Exist"})
+    }
+
+    res.status(204).json({messgae:"Your Profile has been deleted"})
+
+    
 }
 
 
