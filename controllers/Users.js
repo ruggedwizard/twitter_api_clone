@@ -52,10 +52,8 @@ const LoginUser = async (req,res) =>{
 
 
     //If the user does not exist
-
-    if(user==null){
-
-        res.status(404).send({message:"User Login Details Mismacth"})
+    if(user === null){
+        res.status(404).json({"messgae":"No Data Found"})
     }
 
     // If the user exists in the database
@@ -66,6 +64,9 @@ const LoginUser = async (req,res) =>{
             const token = await jwt.sign({userId:user.username,email:user.email},process.env.JWT_SECRET,{expiresIn:'30d'}) 
             // send the access token and email address
             res.json({email:user.email,token})
+        }
+        if(result === false){
+            res.status(400).json({message:"Invalid Login Credentials Provided"})
         }
     }
 
@@ -93,6 +94,12 @@ const UpdateUser =async (req,res) =>{
 
 const DeleteUser = async (req,res) =>{
     const {email,username} = req.user
+
+    const user = await User.findOne({email:email})
+
+    if(user == null){
+        res.status(400).json({message:'No Profile Record Found'})
+    }
 
     const profile = await User.findOneAndDelete({email:email,username:username})
 

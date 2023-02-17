@@ -52,6 +52,12 @@ const userSchema = new mongoose.Schema({
             type:mongoose.Schema.Types.ObjectId,
             ref:'Following'
         }
+    ],
+    tweets:[
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:'Tweets'
+        }
     ]
 })
 

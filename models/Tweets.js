@@ -6,6 +6,11 @@ const tweetSchema = new mongoose.Schema({
         ref:'User',
         required:[true,'Please Provide a User']
     },
+    tweetBody:{
+        type:String,
+        maxlength:250,
+        required:[true,'You Cant Post an Empty Tweet']
+    },
     likes:{
         type:Number,
         default:0,
