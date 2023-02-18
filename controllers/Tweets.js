@@ -49,8 +49,20 @@ const DeleteTweet = async (req,res) =>{
 
 }
 
-const LikeTweet = (req,res) =>{
-    res.send('Liked Tweet')
+const LikeTweet = async (req,res) =>{
+    const {tweetID} = req.params
+    // Find the tweet
+    const tweet =await Tweets.findOne({_id:tweetID})
+
+    if(tweet === null){
+        res.status(StatusCodes.NOT_FOUND).json({message:"Tweet Deleted"})
+    }
+
+    if(tweet != null){
+        updated = await Tweets.findOneAndUpdate({_id:tweetID},{likes:tweet.likes+1},{new:true})
+        res.status(StatusCodes.ACCEPTED).json(updated)
+    }
+    // like the tweet and increase the tweet counter
 }
 
 const UnLikeTweet = (req,res) =>{
