@@ -67,8 +67,21 @@ const LikeTweet = async (req,res) =>{
    
 }
 
-const UnLikeTweet = (req,res) =>{
-    res.send('Unliked Tweet')
+const UnLikeTweet = async (req,res) =>{
+    const {tweetID} = req.params
+    // Find the tweet
+    try{
+        const tweet =await Tweets.findOne({_id:tweetID})
+        if(tweet === null){
+            res.status(StatusCodes.NOT_FOUND).json({message:"Tweet Deleted"})
+        }
+        if(tweet != null){
+            updated = await Tweets.findOneAndUpdate({_id:tweetID},{likes:tweet.likes-1},{new:true})
+            res.status(StatusCodes.ACCEPTED).json(updated)
+        }
+    } catch(error){
+        res.status(StatusCodes.NOT_FOUND).json({message:"Tweet Not Found"})
+    }
 }
 
 const CommentOnTweet = (req,res) =>{
