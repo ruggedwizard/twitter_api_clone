@@ -1,6 +1,7 @@
 const {StatusCodes} = require('http-status-codes')
 const Users = require('../models/Users')
 const Tweets = require('../models/Tweets')
+const Comments = require('../models/Comments')
 
 const GetTweets = async (req,res)=>{
     const tweets = await Tweets.find({})
@@ -76,7 +77,7 @@ const UnLikeTweet = async (req,res) =>{
             res.status(StatusCodes.NOT_FOUND).json({message:"Tweet Deleted"})
         }
         if(tweet != null){
-            updated = await Tweets.findOneAndUpdate({_id:tweetID},{likes:tweet.likes-1},{new:true})
+            updated = await Tweets.findOneAndUpdate({_id:tweetID},{likes:likes+1},{new:true})
             res.status(StatusCodes.ACCEPTED).json(updated)
         }
     } catch(error){
@@ -84,8 +85,29 @@ const UnLikeTweet = async (req,res) =>{
     }
 }
 
-const CommentOnTweet = (req,res) =>{
-    res.send('Comment Added to Tweet')
+const CommentOnTweet = async (req,res) =>{
+    const {tweetID} = req.params
+    const {userId,username} = req.user
+    const {commentBody} = req.body
+    // Find the tweet
+
+    try{
+        const tweet =await Tweets.findOne({_id:tweetID})
+        if(tweet === null){
+            res.status(StatusCodes.NOT_FOUND).json({message:"Tweet Deleted"})
+        }
+        if(tweet != null){
+            // Create Comment
+            comment = await Comments.create({tweetId:tweetID,commentBy:userId,commentBody:commentBody})
+            updated = await Tweets.findOne({_id:tweetID})
+            updated.comments.push(comment)
+            await updated.save()
+            
+            res.status(StatusCodes.ACCEPTED).json(updated)
+        }
+    } catch(error){
+        res.status(StatusCodes.NOT_FOUND).json({error})
+    }
 }
 
 

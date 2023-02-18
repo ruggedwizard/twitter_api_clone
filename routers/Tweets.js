@@ -12,7 +12,7 @@ router.delete('delete/:tweetID',authMiddleware,DeleteTweet)
 
 router.patch('/like/:tweetID',LikeTweet)
 
-router.patch('/:tweetID',UpdateTweet)
+router.patch('/comment/:tweetID',authMiddleware,CommentOnTweet)
 
 
 
