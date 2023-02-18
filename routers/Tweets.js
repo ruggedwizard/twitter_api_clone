@@ -8,6 +8,8 @@ router.get('/',GetTweets)
 
 router.post('/',authMiddleware,PostTweet)
 
+router.delete('/:tweetID',authMiddleware,DeleteTweet)
+
 router.patch('/:tweetID',UpdateTweet)
 
 

@@ -4,9 +4,6 @@ const Tweets = require('../models/Tweets')
 
 const GetTweets = async (req,res)=>{
     const tweets = await Tweets.find({})
-
-    console.log(tweets.length)
-
     if(tweets.length <= 0 ){
         res.status(StatusCodes.BAD_REQUEST).json({message:"No Tweets Available Yet"})
     }
@@ -36,8 +33,20 @@ const UpdateTweet = (req,res) =>{
     res.send('Tweet Deleted')
 }
 
-const DeleteTweet = (req,res) =>{
-    res.send('Tweet Deleted')
+const DeleteTweet = async (req,res) =>{
+    const {userId,username} = req.user
+    const {tweetID} = req.params
+    // Find tweet
+    try{
+        const tweet = await Tweets.findOne({_id:tweetID,createdBy:userId})
+        // Delete the tweet
+        const tweetDelete = await Tweets.findOneAndDelete({_id:tweetID,createdBy:userId})  
+        res.status(StatusCodes.NO_CONTENT).send('')  
+
+    } catch(error){
+        res.status(StatusCodes.NOT_FOUND).json({message:"Tweet Not Found"})
+    }
+
 }
 
 const LikeTweet = (req,res) =>{
